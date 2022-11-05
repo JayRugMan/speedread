@@ -23,7 +23,7 @@ first_word = 0
 last_word = 1
 sleep_time = 0.2
 while True:
-    if last_word == 10:
+    if last_word == 30:
         break
     print(' '.join(the_line[first_word:last_word]))
     sleep(sleep_time)
