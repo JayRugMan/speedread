@@ -7,21 +7,35 @@ import os.path
 
 file_list_column = [
   [
-    sg.Text('Image Folder'),
-    sg.In(size=(25,1), enable_events=True, key='-FOLDER-'),
+    sg.Text('Text File Folder'),
+    sg.In(os.getcwd(), size=(25,1), enable_events=True, key='-FOLDER-'),
     sg.FolderBrowse(),
     sg.Stretch(),
   ],
   [
     sg.Listbox(
-      values=[], enable_events=True, size=(40,20),
+      values=[], enable_events=True, size=(40,10),
       key='-FILE LIST-'
     )
   ],
+  [
+    sg.Slider(
+      range=(1, 20), default_value=1, size=(20, 10), 
+      orientation='horizontal'
+    ),
+    sg.Text(' ' * 10),
+    sg.Dial(
+      range=(30,400), default_value=150, size=(10, 10)
+    )
+  ],
+  [
+    sg.Text('Words at a time', justification='l'),
+    sg.Text('Words / Min', justification='r')
+  ],
 ]
 
-image_viewer_column = [
-  [sg.Text("Choose an image from the list on the left:")],
+text_viewer_column = [
+  [sg.Text("Choose a text file from the list on the left:")],
   [sg.Text(size=(40,1), key="-TOUT-")],
   [
     sg.Stretch(),
@@ -36,12 +50,12 @@ layout = [
     sg.Column(file_list_column),
     sg.VSeperator(),
     sg.Stretch(),
-    sg.Column(image_viewer_column),
+    sg.Column(text_viewer_column),
     sg.Stretch(),
   ]
 ]
 
-window = sg.Window("Now You See Me", layout)
+window = sg.Window("Speed Read", layout, alpha_channel=0.85)
 
 # the loop
 while True:
@@ -61,7 +75,7 @@ while True:
             f
             for f in file_list
             if os.path.isfile(os.path.join(folder, f))
-            and f.lower().endswith((".jpg", ".jpeg", ".png", ".gif", ".svg", ".ico", ".webp"))
+            and f.lower().endswith((".txt"))
         ]
         window["-FILE LIST-"].update(fnames)
     elif event == "-FILE LIST-":  # A file was chosen from the list
