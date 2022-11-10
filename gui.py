@@ -5,6 +5,40 @@ import os.path
 
 sg.theme('DarkTeal12')  # See gui_theme_sampler.py for more options
 
+the_slider = [
+  [
+    sg.Stretch(),
+    sg.Slider(
+      range=(1, 20), default_value=1, size=(20, 10), orientation='horizontal',
+      enable_events=True, key="-SLIDER-", tooltip=("Adjust Words at a time")
+    ),
+    sg.Stretch()
+  ],
+  [
+    sg.Stretch(),
+    sg.Text('Words at a time:', justification='l'),
+    sg.Text("1", key="-WORDS-"),
+    sg.Stretch()
+  ]
+]
+
+the_dial = [
+  [
+    sg.Stretch(),
+    sg.Dial(
+      range=(3,42), default_value=15, size=(10, 2), enable_events=True,
+      key="-DIAL-", tooltip=("Adjust WPM")
+    ),
+    sg.Stretch()
+  ],
+  [
+    sg.Stretch(),
+    sg.Text('Words per minute:', justification='r'),
+    sg.Text("150", key="-WPM-"),
+    sg.Stretch()
+  ]
+]
+
 # Window layout of 2 columns
 
 file_list_column = [
@@ -14,22 +48,9 @@ file_list_column = [
   ],
   [sg.Listbox(values=[], enable_events=True, size=(40,10), key='-FILE LIST-')],
   [
-    sg.Slider(
-      range=(1, 20), default_value=1, size=(20, 10), orientation='horizontal',
-      enable_events=True, key="-SLIDER-", tooltip=("Adjust Words at a time")
-    ),
-    sg.Dial(
-      range=(3,42), default_value=15, size=(10, 2), enable_events=True,
-      key="-DIAL-", tooltip=("Adjust WPM")
-    )
+    sg.Column(the_slider),
+    sg.Column(the_dial)
   ],
-  [
-    sg.Text('Words at a time:', justification='l'),
-    sg.Text("1", key="-WORDS-"),
-    sg.Text('Words per minute:', justification='r'),
-    sg.Text("150", key="-WPM-")
-  ],
-  [sg.Dial(range=(1,14), size=(10, 2)), sg.Text("Some Words", justification='c')]
 ]
 
 text_viewer_column = [
