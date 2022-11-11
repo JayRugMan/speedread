@@ -4,20 +4,57 @@ import PySimpleGUIQt as sg
 import os.path
 
 sg.theme('DarkTeal12')  # See gui_theme_sampler.py for more options
+font_1 = 'Any 12'
+font_button = 'Any 14'
+working_dir = os.getcwd()
+file_list = os.listdir(working_dir)
+fnames = [
+            f
+            for f in file_list
+            if os.path.isfile(os.path.join(working_dir, f))
+            and f.lower().endswith((".txt"))
+        ]
+
+file_works = [
+  [
+    sg.Text('Text File Folder', font=(font_1)),
+    sg.In(
+      working_dir,
+      size=(45,1),
+      enable_events=True,
+      key='-FOLDER-',
+      font=(font_1)
+    ),
+    sg.FolderBrowse(' Browse ', font=(font_button)),
+    sg.Stretch()
+  ],
+  [sg.Text("")],
+  [
+    sg.Stretch(),
+    sg.Listbox(
+      values=fnames,
+      enable_events=True,
+      size=(65,10),
+      key='-FILE LIST-',
+      font=(font_1)
+    ),
+    sg.Stretch()
+  ]
+]
 
 the_slider = [
   [
     sg.Stretch(),
-    sg.Slider(
-      range=(1, 20), default_value=1, size=(20, 10), orientation='horizontal',
-      enable_events=True, key="-SLIDER-", tooltip=("Adjust Words at a time")
-    ),
+    sg.Text('Words at a time:', justification='l', font=(font_1)),
+    sg.Text("1", font=(font_1), key="-WORDS-"),
     sg.Stretch()
   ],
   [
     sg.Stretch(),
-    sg.Text('Words at a time:', justification='l'),
-    sg.Text("1", key="-WORDS-"),
+    sg.Slider(
+      range=(1, 20), default_value=1, size=(35, 20), orientation='horizontal',
+      enable_events=True, key="-SLIDER-", tooltip=("Adjust Words at a time")
+    ),
     sg.Stretch()
   ]
 ]
@@ -25,49 +62,31 @@ the_slider = [
 the_dial = [
   [
     sg.Stretch(),
+    sg.Text('Words per minute:', justification='r', font=(font_1)),
+    sg.Text("150", font=(font_1), key="-WPM-"),
+    sg.Stretch()
+  ],
+  [
+    sg.Stretch(),
     sg.Dial(
-      range=(3,42), default_value=15, size=(10, 2), enable_events=True,
+      range=(3,42), default_value=15, size=(20, 4), enable_events=True,
       key="-DIAL-", tooltip=("Adjust WPM")
     ),
     sg.Stretch()
-  ],
-  [
-    sg.Stretch(),
-    sg.Text('Words per minute:', justification='r'),
-    sg.Text("150", key="-WPM-"),
-    sg.Stretch()
   ]
-]
-
-# Window layout of 2 columns
-
-file_list_column = [
-  [
-    sg.Text('Text File Folder'),sg.In(os.getcwd(), size=(25,1),
-    enable_events=True, key='-FOLDER-'), sg.FolderBrowse(), sg.Stretch()
-  ],
-  [sg.Listbox(values=[], enable_events=True, size=(40,10), key='-FILE LIST-')],
-  [
-    sg.Column(the_slider),
-    sg.Column(the_dial)
-  ],
-]
-
-text_viewer_column = [
-  [sg.Text("Choose a text file from the list on the left:")],
-  [sg.Text(size=(40,1), key="-TOUT-")],
-  [sg.Stretch(), sg.Image(key="-IMAGE-"), sg.Stretch(),]
 ]
 
 # ---- full layout ----
+
 layout = [
   [
-    sg.Column(file_list_column),
-    sg.VSeperator(),
+    sg.Column(file_works)
+  ],
+  [
+    sg.Stretch(), sg.Column(the_slider),
     sg.Stretch(),
-    sg.Column(text_viewer_column),
-    sg.Stretch(),
-  ]
+    sg.Column(the_dial), sg.Stretch(),
+  ],
 ]
 
 window = sg.Window("Speed Read", layout, alpha_channel=0.9)
@@ -85,7 +104,6 @@ while True:
             file_list = os.listdir(folder)
         except:
             file_list = []
-        
         fnames = [
             f
             for f in file_list
