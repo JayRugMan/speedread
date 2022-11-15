@@ -5,6 +5,7 @@ import os.path
 
 sg.theme('DarkTeal12')  # See gui_theme_sampler.py for more options
 font_1 = 'Any 12'
+font_2 = 'Any 16'
 font_button = 'Any 14'
 working_dir = os.getcwd()
 file_list = os.listdir(working_dir)
@@ -76,6 +77,32 @@ the_dial = [
   ]
 ]
 
+file_name = [
+  [
+    sg.Text(
+      "(select a Text above and Click READ)",
+      font=(font_1), key="-FILE NAME-"
+    ),
+    sg.Button(
+      button_text=" READ ", font=(font_button),
+      key="-READ-",enable_events=True
+    ),
+    sg.Button(
+      button_text=" = ", font=(font_button),
+      key="-PAUSE-", enable_events=True
+    ),
+  ]
+]
+
+the_reader = [
+  [
+    sg.Text(
+      "Click \"READ\"", justification='c', font=(font_2),
+      enable_events=True, key="-READER-"
+    )
+  ]
+]
+
 # ---- full layout ----
 
 layout = [
@@ -87,6 +114,13 @@ layout = [
     sg.Stretch(),
     sg.Column(the_dial), sg.Stretch(),
   ],
+  [
+    sg.Stretch(), sg.Column(file_name), sg.Stretch()
+  ],
+  [sg.HSeperator()],
+  [
+    sg.Stretch(), sg.Column(the_reader), sg.Stretch()
+  ]
 ]
 
 window = sg.Window("Speed Read", layout, alpha_channel=0.9)
@@ -116,19 +150,28 @@ while True:
             filename = os.path.join(
                 values["-FOLDER-"], values["-FILE LIST-"][0]
             )
-            window["-TOUT-"].update(filename)
-            window["-IMAGE-"].update(filename=filename)
+            window["-FILE NAME-"].update(filename)
+            ##JH window["-IMAGE-"].update(filename=filename)
             window.VisibilityChanged()
         except:
             pass
-    elif event == "-DIAL-":
-      wpm = int(values["-DIAL-"]) * 10
-      window["-WPM-"].update(wpm)
-      window.VisibilityChanged()
     elif event == "-SLIDER-":
-      wpm = int(values["-SLIDER-"])
-      window["-WORDS-"].update(wpm)
-      window.VisibilityChanged()
+        words = int(values["-SLIDER-"])
+        window["-WORDS-"].update(words)
+        window.VisibilityChanged()
+    elif event == "-DIAL-":
+        wpm = int(values["-DIAL-"]) * 10
+        window["-WPM-"].update(wpm)
+        window.VisibilityChanged()
+    ##JH elif event == "-PAUSE-":
+    ##JH     if values["-PAUSE-"] == ' = ':
+    ##JH         window["-PAUSE-"].update(' > ')
+    ##JH         window.VisibilityChanged()
+    ##JH     elif values["-PAUSE-"] == ' > ':
+    ##JH         window["-PAUSE-"].update(' = ')
+    ##JH         window.VisibilityChanged()
+
+
 
 window.close()
     
