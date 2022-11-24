@@ -2,6 +2,17 @@
 
 import PySimpleGUIQt as sg
 import os.path
+from os import system, name as os_name
+from time import sleep
+
+
+def clear():
+    '''Clears the screen depending on the os name'''
+    if os_name == 'nt':
+        _ = system('cls')
+    else:
+        _ = system('clear')            
+
 
 sg.theme('DarkTeal12')  # See gui_theme_sampler.py for more options
 font_1 = 'Any 12'
@@ -15,6 +26,7 @@ fnames = [
             if os.path.isfile(os.path.join(working_dir, f))
             and f.lower().endswith((".txt"))
         ]
+file_chosen = False
 
 file_works = [
   [
@@ -146,6 +158,7 @@ while True:
         ]
         window["-FILE LIST-"].update(fnames)
     elif event == "-FILE LIST-":  # A file was chosen from the list
+        file_chosen = True
         try:
             filename = os.path.join(
                 values["-FOLDER-"], values["-FILE LIST-"][0]
@@ -163,14 +176,25 @@ while True:
         wpm = int(values["-DIAL-"]) * 10
         window["-WPM-"].update(wpm)
         window.VisibilityChanged()
-    ##JH elif event == "-PAUSE-":
-    ##JH     if values["-PAUSE-"] == ' = ':
-    ##JH         window["-PAUSE-"].update(' > ')
-    ##JH         window.VisibilityChanged()
-    ##JH     elif values["-PAUSE-"] == ' > ':
-    ##JH         window["-PAUSE-"].update(' = ')
-    ##JH         window.VisibilityChanged()
-
+    elif event == "-READ-":
+        if file_chosen:
+            with open(filename, 'r') as file:
+                the_lines = [i for i in file.read().split('\n') if len(i) != 0]
+            words_list = the_lines[0].split(' ')  # each word as list item\
+            w_count = int(values["-SLIDER-"])
+            wpm = int(values["-DIAL-"]) * 10
+            first_word = 0
+            last_word = w_count
+            sleep_time = w_count / (wpm/60)
+            while True:
+                if last_word >= len(words_list):
+                    break
+                to_display = ' '.join(words_list[first_word:last_word])
+                window["-READER-"].update(to_display)
+                window.VisibilityChanged()
+                sleep(sleep_time)
+                first_word += w_count
+                last_word += w_count
 
 
 window.close()
