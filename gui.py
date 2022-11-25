@@ -27,6 +27,8 @@ fnames = [
             and f.lower().endswith((".txt"))
         ]
 file_chosen = False
+not_paused = True
+is_open = False
 
 file_works = [
   [
@@ -82,7 +84,7 @@ the_dial = [
   [
     sg.Stretch(),
     sg.Dial(
-      range=(3,42), default_value=15, size=(20, 4), enable_events=True,
+      range=(3,64), default_value=15, size=(20, 4), enable_events=True,
       key="-DIAL-", tooltip=("Adjust WPM")
     ),
     sg.Stretch()
@@ -139,7 +141,18 @@ window = sg.Window("Speed Read", layout, alpha_channel=0.9)
 
 # the loop
 while True:
-    event, values = window.read()
+    if is_open and not_paused:
+        event, values = window.read(timeout=0)
+        if last_word < len(words_list):
+            to_display = ' '.join(words_list[first_word:last_word])
+            ##JH window["-READER-"].update("{} {}".format(to_display, sleep_time))
+            window["-READER-"].update(to_display)
+            window.VisibilityChanged()
+            sleep(sleep_time)
+            first_word += w_count
+            last_word += w_count
+    else:
+        event, values = window.read()
     if event in ("EXIT", sg.WIN_CLOSED):
         break
     # list files in the selected folder
@@ -158,12 +171,12 @@ while True:
         ]
         window["-FILE LIST-"].update(fnames)
     elif event == "-FILE LIST-":  # A file was chosen from the list
-        file_chosen = True
         try:
             filename = os.path.join(
                 values["-FOLDER-"], values["-FILE LIST-"][0]
             )
             window["-FILE NAME-"].update(filename)
+            file_chosen = True
             ##JH window["-IMAGE-"].update(filename=filename)
             window.VisibilityChanged()
         except:
@@ -176,25 +189,23 @@ while True:
         wpm = int(values["-DIAL-"]) * 10
         window["-WPM-"].update(wpm)
         window.VisibilityChanged()
+    elif event == "-PAUSE-":
+        if not_paused:
+            not_paused = False
+        else:
+            not_paused = True
     elif event == "-READ-":
         if file_chosen:
             with open(filename, 'r') as file:
                 the_lines = [i for i in file.read().split('\n') if len(i) != 0]
             words_list = the_lines[0].split(' ')  # each word as list item\
+            is_open = True
             w_count = int(values["-SLIDER-"])
             wpm = int(values["-DIAL-"]) * 10
             first_word = 0
             last_word = w_count
             sleep_time = w_count / (wpm/60)
-            while True:
-                if last_word >= len(words_list):
-                    break
-                to_display = ' '.join(words_list[first_word:last_word])
-                window["-READER-"].update(to_display)
-                window.VisibilityChanged()
-                sleep(sleep_time)
-                first_word += w_count
-                last_word += w_count
+        
 
 
 window.close()
