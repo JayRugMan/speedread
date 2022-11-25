@@ -3,15 +3,7 @@
 import PySimpleGUIQt as sg
 import os.path
 from os import system, name as os_name
-from time import sleep
-
-
-def clear():
-    '''Clears the screen depending on the os name'''
-    if os_name == 'nt':
-        _ = system('cls')
-    else:
-        _ = system('clear')            
+from time import sleep         
 
 
 sg.theme('DarkTeal12')  # See gui_theme_sampler.py for more options
