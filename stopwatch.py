@@ -1,8 +1,7 @@
 #! /usr/bin/env python3
 
 import PySimpleGUIQt as sg
-from datetime import datetime
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 
 class timer():
@@ -11,14 +10,14 @@ class timer():
     def __init__(self):
         self.started = False
         self.paused = False
-        self.beginning = 0
+        self.time_mark = datetime.now()
+        self.clock_time = timedelta(0)
         self.show = "0:00:00.000000"
     
     def start(self):
+        self.time_mark = datetime.now()
         if self.paused:
             self.paused = False
-        if not self.started:
-            self.beginning = datetime.now()
         self.started = True
 
     def stop(self):
@@ -26,8 +25,9 @@ class timer():
     
     def update(self):
         now = datetime.now()
-        new_delta = now - self.beginning
-        self.show = str(new_delta)
+        self.clock_time += (now - self.time_mark)
+        self.time_mark = now
+        self.show = str(self.clock_time)
 
 
 the_timer = timer()
@@ -53,12 +53,12 @@ layout = [
         sg.Stretch(),
         sg.Button(
             button_text=" stop ", font=(font_button),
-            key="-STOP-"
+            key="-STOP-", enable_events=True
         ),
         sg.Stretch(),
         sg.Button(
             button_text=" reset ", font=(font_button),
-            key="-RESET-"
+            key="-RESET-", enable_events=True
         ),
     ]
 ]
@@ -68,22 +68,24 @@ window = sg.Window("Stop Watch", layout, alpha_channel=0.9)
 # the loop
 while True:
     if the_timer.started and not the_timer.paused:
-        event, values = window.read(timeout=0)
-        the_timer.update()
-        window["-CLOCK-"].update(the_timer.show)
-        window.VisibilityChanged()
+        event, values = window.read(timeout=10)
+        if event in ("EXIT", sg.WIN_CLOSED):
+            break
+        elif event == '-STOP-':
+            the_timer.stop()
+            pass
+        else:
+            the_timer.update()
+            window["-CLOCK-"].update(the_timer.show)
     else:
         event, values = window.read()
-    if event in ("EXIT", sg.WIN_CLOSED):
-        break
-    # list files in the selected folder
-    if event == '-START-':
-        the_timer.start()
-    elif event == '-STOP-':
-        the_timer.stop()
-    elif event == '-RESET-':
-        the_timer = timer()
-        window["-CLOCK-"].update(the_timer.show)
+        if event in ("EXIT", sg.WIN_CLOSED):
+            break
+        if event == '-START-':
+            the_timer.start()
+        elif event == '-RESET-':
+            the_timer = timer()
+            window["-CLOCK-"].update(the_timer.show)
 
 
 window.close()
