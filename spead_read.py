@@ -204,7 +204,8 @@ while True:
             first_word = 0
             last_word = w_count
             sleep_time = w_count / (wpm/60)
-            to_display = "File Loaded for {} {} at {} WPM. Press Play!".format(w_count, word_grammar, wpm)
+            disp_str = "File Loaded for {} {} at {} WPM. Press Play!"
+            to_display = disp_str.format(w_count, word_grammar, wpm)
             window["-READER-"].update(to_display)
         
 
