@@ -111,7 +111,7 @@ button_panel = [
 the_reader = [
   [
     sg.Text(
-      'Select a text and "Load"', justification='c', font=(font_2),
+      'Select a text, word count, and wpm, then "Load"', justification='c', font=(font_2),
       enable_events=True, key="-READER-"
     )
   ]
@@ -196,10 +196,16 @@ while True:
             words_list = the_lines[0].split(' ')  # each word as list item\
             opened = True
             w_count = int(values["-SLIDER-"])
+            if w_count == 1:
+                word_grammar = 'word'
+            else:
+                word_grammar = 'words'
             wpm = int(values["-DIAL-"]) * 10
             first_word = 0
             last_word = w_count
             sleep_time = w_count / (wpm/60)
+            to_display = "File Loaded for {} {} at {} WPM. Press Play!".format(w_count, word_grammar, wpm)
+            window["-READER-"].update(to_display)
         
 
 
