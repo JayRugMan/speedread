@@ -153,60 +153,63 @@ while True:
             sleep(sleep_time)
             first_word += w_count
             last_word += w_count
+        if event == "-PAUSE-PLAY-":
+            if paused:  # Toggles pause/play
+                paused = False
+            else:
+                paused = True
     else:
         event, values = window.read()
-    if event in ("EXIT", sg.WIN_CLOSED):
-        break
-    if event == "-FOLDER-":
-        folder = values["-FOLDER-"]
-        try:
-            file_list = os.listdir(folder)
-        except:
-            file_list = []
-        file_names = list_files(file_list, folder)
-        window["-FILE LIST-"].update(file_names)
-    elif event == "-FILE LIST-":  # A file was chosen from the list
-        try:
-            filename = os.path.join(
-                values["-FOLDER-"], values["-FILE LIST-"][0]
-            )
-            window["-FILE NAME-"].update(filename)
-            file_chosen = True
-            ##JH window["-IMAGE-"].update(filename=filename)
+        if event in ("EXIT", sg.WIN_CLOSED):
+            break
+        if event == "-FOLDER-":
+            folder = values["-FOLDER-"]
+            try:
+                file_list = os.listdir(folder)
+            except:
+                file_list = []
+            file_names = list_files(file_list, folder)
+            window["-FILE LIST-"].update(file_names)
+        elif event == "-FILE LIST-":  # A file was chosen from the list
+            try:
+                filename = os.path.join(
+                    values["-FOLDER-"], values["-FILE LIST-"][0]
+                )
+                window["-FILE NAME-"].update(filename)
+                file_chosen = True
+                ##JH window["-IMAGE-"].update(filename=filename)
+                window.VisibilityChanged()
+            except:
+                pass
+        elif event == "-SLIDER-":
+            words = int(values["-SLIDER-"])
+            window["-WORDS-"].update(words)
             window.VisibilityChanged()
-        except:
-            pass
-    elif event == "-SLIDER-":
-        words = int(values["-SLIDER-"])
-        window["-WORDS-"].update(words)
-        window.VisibilityChanged()
-    elif event == "-DIAL-":
-        wpm = int(values["-DIAL-"]) * 10
-        window["-WPM-"].update(wpm)
-        window.VisibilityChanged()
-    elif event == "-PAUSE-PLAY-":
-        if paused:  # Toggles pause/play
-            paused = False
-        else:
-            paused = True
-    elif event == "-LOAD-":
-        if file_chosen:
-            with open(filename, 'r') as file:
-                the_lines = [i for i in file.read().split('\n') if len(i) != 0]
-            words_list = the_lines[0].split(' ')  # each word as list item\
-            opened = True
-            w_count = int(values["-SLIDER-"])
-            if w_count == 1:
-                word_grammar = 'word'
-            else:
-                word_grammar = 'words'
+        elif event == "-DIAL-":
             wpm = int(values["-DIAL-"]) * 10
-            first_word = 0
-            last_word = w_count
-            sleep_time = w_count / (wpm/60)
-            disp_str = "File Loaded for {} {} at {} WPM. Press Play!"
-            to_display = disp_str.format(w_count, word_grammar, wpm)
-            window["-READER-"].update(to_display)
+            window["-WPM-"].update(wpm)
+            window.VisibilityChanged()
+        elif event == "-LOAD-":
+            if file_chosen:
+                with open(filename, 'r') as file:
+                    the_lines = [i for i in file.read().split('\n') if len(i) != 0]
+                words_list = the_lines[0].split(' ')  # each word as list item\
+                opened = True
+                w_count = int(values["-SLIDER-"])
+                if w_count == 1:
+                    word_grammar = 'word'
+                else:
+                    word_grammar = 'words'
+                wpm = int(values["-DIAL-"]) * 10
+                first_word = 0
+                last_word = w_count
+                sleep_time = w_count / (wpm/60)
+                disp_str = "File Loaded for {} {} at {} WPM. Press Play!"
+                to_display = disp_str.format(w_count, word_grammar, wpm)
+                window["-READER-"].update(to_display)
+            else:
+                the_text = 'Select I file before clicking that!'
+                window["-FILE NAME-"].update(the_text)
         
 
 
