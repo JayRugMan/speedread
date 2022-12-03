@@ -90,12 +90,12 @@ the_dial = [
 file_name = [
   [
     sg.Text(
-      "(select a Text above and Click READ)",
+      'No text selected',
       font=(font_1), key="-FILE NAME-"
     ),
     sg.Button(
-      button_text=" READ ", font=(font_button),
-      key="-READ-",enable_events=True
+      button_text=" Load ", font=(font_button),
+      key="-LOAD-",enable_events=True
     ),
     sg.Button(
       button_text=" Pause/Play ", font=(font_button),
@@ -107,7 +107,7 @@ file_name = [
 the_reader = [
   [
     sg.Text(
-      "Click \"READ\"", justification='c', font=(font_2),
+      'Select a text and "Load"', justification='c', font=(font_2),
       enable_events=True, key="-READER-"
     )
   ]
@@ -190,7 +190,7 @@ while True:
             paused = True
         else:
             paused = False
-    elif event == "-READ-":
+    elif event == "-LOAD-":
         if file_chosen:
             with open(filename, 'r') as file:
                 the_lines = [i for i in file.read().split('\n') if len(i) != 0]
