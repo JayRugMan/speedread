@@ -6,15 +6,19 @@ from os import system, name as os_name
 from time import sleep         
 
 
+def list_files(f_list, the_dir):
+    fnames = [
+                f
+                for f in f_list
+                if os.path.isfile(os.path.join(the_dir, f))
+                and f.lower().endswith((".txt"))
+            ]
+    return fnames
+
 
 working_dir = os.getcwd()
 file_list = os.listdir(working_dir)
-fnames = [
-            f
-            for f in file_list
-            if os.path.isfile(os.path.join(working_dir, f))
-            and f.lower().endswith((".txt"))
-        ]
+file_names = list_files(file_list, working_dir)
 file_chosen = False
 paused = True
 opened = False
@@ -26,7 +30,7 @@ font_1 = 'Any 12'
 font_2 = 'Any 16'
 font_button = 'Any 14'
 
-file_works = [
+text_selection = [
   [
     sg.Text('Text File Folder', font=(font_1)),
     sg.In(
@@ -43,7 +47,7 @@ file_works = [
   [
     sg.Stretch(),
     sg.Listbox(
-      values=fnames,
+      values=file_names,
       enable_events=True,
       size=(65,10),
       key='-FILE LIST-',
@@ -87,7 +91,7 @@ the_dial = [
   ]
 ]
 
-file_name = [
+button_panel = [
   [
     sg.Text(
       'No text selected',
@@ -99,7 +103,7 @@ file_name = [
     ),
     sg.Button(
       button_text=" Pause/Play ", font=(font_button),
-      key="-PAUSE-", enable_events=True
+      key="-PAUSE-PLAY-", enable_events=True
     ),
   ]
 ]
@@ -117,7 +121,7 @@ the_reader = [
 
 layout = [
   [
-    sg.Column(file_works)
+    sg.Column(text_selection)
   ],
   [
     sg.Stretch(), sg.Column(the_slider),
@@ -125,7 +129,7 @@ layout = [
     sg.Column(the_dial), sg.Stretch(),
   ],
   [
-    sg.Stretch(), sg.Column(file_name), sg.Stretch()
+    sg.Stretch(), sg.Column(button_panel), sg.Stretch()
   ],
   [sg.HSeperator()],
   [
@@ -139,7 +143,9 @@ window = sg.Window("Speed Read", layout, alpha_channel=0.9)
 while True:
     if opened and not paused:
         event, values = window.read(timeout=0)
-        if last_word < len(words_list):
+        if event in ("EXIT", sg.WIN_CLOSED):
+            break
+        elif last_word < len(words_list):
             to_display = ' '.join(words_list[first_word:last_word])
             ##JH window["-READER-"].update("{} {}".format(to_display, sleep_time))
             window["-READER-"].update(to_display)
@@ -151,21 +157,14 @@ while True:
         event, values = window.read()
     if event in ("EXIT", sg.WIN_CLOSED):
         break
-    # list files in the selected folder
     if event == "-FOLDER-":
         folder = values["-FOLDER-"]
         try:
-            # get list of files in folder
             file_list = os.listdir(folder)
         except:
             file_list = []
-        fnames = [
-            f
-            for f in file_list
-            if os.path.isfile(os.path.join(folder, f))
-            and f.lower().endswith((".txt"))
-        ]
-        window["-FILE LIST-"].update(fnames)
+        file_names = list_files(file_list, folder)
+        window["-FILE LIST-"].update(file_names)
     elif event == "-FILE LIST-":  # A file was chosen from the list
         try:
             filename = os.path.join(
@@ -185,11 +184,11 @@ while True:
         wpm = int(values["-DIAL-"]) * 10
         window["-WPM-"].update(wpm)
         window.VisibilityChanged()
-    elif event == "-PAUSE-":
-        if not paused:
-            paused = True
-        else:
+    elif event == "-PAUSE-PLAY-":
+        if paused:  # Toggles pause/play
             paused = False
+        else:
+            paused = True
     elif event == "-LOAD-":
         if file_chosen:
             with open(filename, 'r') as file:
