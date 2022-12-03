@@ -16,7 +16,7 @@ fnames = [
             and f.lower().endswith((".txt"))
         ]
 file_chosen = False
-paused = False
+paused = True
 opened = False
 
 
