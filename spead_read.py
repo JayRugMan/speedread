@@ -6,10 +6,7 @@ from os import system, name as os_name
 from time import sleep         
 
 
-sg.theme('DarkTeal12')  # See gui_theme_sampler.py for more options
-font_1 = 'Any 12'
-font_2 = 'Any 16'
-font_button = 'Any 14'
+
 working_dir = os.getcwd()
 file_list = os.listdir(working_dir)
 fnames = [
@@ -19,8 +16,15 @@ fnames = [
             and f.lower().endswith((".txt"))
         ]
 file_chosen = False
-not_paused = True
-is_open = False
+paused = False
+opened = False
+
+
+#====== Simple GUI stuff =======
+sg.theme('DarkTeal12')  # See gui_theme_sampler.py for more options
+font_1 = 'Any 12'
+font_2 = 'Any 16'
+font_button = 'Any 14'
 
 file_works = [
   [
@@ -94,7 +98,7 @@ file_name = [
       key="-READ-",enable_events=True
     ),
     sg.Button(
-      button_text=" = ", font=(font_button),
+      button_text=" Pause/Play ", font=(font_button),
       key="-PAUSE-", enable_events=True
     ),
   ]
@@ -133,7 +137,7 @@ window = sg.Window("Speed Read", layout, alpha_channel=0.9)
 
 # the loop
 while True:
-    if is_open and not_paused:
+    if opened and not paused:
         event, values = window.read(timeout=0)
         if last_word < len(words_list):
             to_display = ' '.join(words_list[first_word:last_word])
@@ -182,16 +186,16 @@ while True:
         window["-WPM-"].update(wpm)
         window.VisibilityChanged()
     elif event == "-PAUSE-":
-        if not_paused:
-            not_paused = False
+        if not paused:
+            paused = True
         else:
-            not_paused = True
+            paused = False
     elif event == "-READ-":
         if file_chosen:
             with open(filename, 'r') as file:
                 the_lines = [i for i in file.read().split('\n') if len(i) != 0]
             words_list = the_lines[0].split(' ')  # each word as list item\
-            is_open = True
+            opened = True
             w_count = int(values["-SLIDER-"])
             wpm = int(values["-DIAL-"]) * 10
             first_word = 0
