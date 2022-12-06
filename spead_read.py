@@ -102,8 +102,12 @@ button_panel = [
       key="-LOAD-",enable_events=True
     ),
     sg.Button(
-      button_text=" Pause/Play ", font=(font_button),
-      key="-PAUSE-PLAY-", enable_events=True
+      button_text=" Play ", font=(font_button),
+      key="-PLAY-", enable_events=True, disabled=False
+    ),
+    sg.Button(
+      button_text=" Pause ", font=(font_button),
+      key="-PAUSE-", enable_events=True, disabled=True, button_color="red"
     ),
   ]
 ]
@@ -153,7 +157,7 @@ while True:
             sleep(sleep_time)
             first_word += w_count
             last_word += w_count
-        if event == "-PAUSE-PLAY-":
+        if event == "-PLAY-":
             if paused:  # Toggles pause/play
                 paused = False
             else:
