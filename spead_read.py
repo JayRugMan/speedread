@@ -16,6 +16,15 @@ def list_files(f_list, the_dir):
     return fnames
 
 
+def open_text(path_to_file):
+    '''Opens file and returns a list of words'''
+    with open(path_to_file, 'r') as file:
+        the_lines = [i for i in file.read().split('\n') if len(i) != 0]
+    w_list = the_lines[0].split(' ')  # each word as list item
+    return w_list
+
+
+
 working_dir = os.getcwd()
 file_list = os.listdir(working_dir)
 file_names = list_files(file_list, working_dir)
@@ -199,9 +208,8 @@ while True:
             window.VisibilityChanged()
         elif event == "-LOAD-":
             if file_chosen:
-                with open(file_full_path, 'r') as file:
-                    the_lines = [i for i in file.read().split('\n') if len(i) != 0]
-                words_list = the_lines[0].split(' ')  # each word as list item\
+                # creates list of words
+                words_list = open_text(file_full_path)
                 loaded = True
                 w_count = int(values["-SLIDER-"])
                 if w_count == 1:
