@@ -103,7 +103,7 @@ button_panel = [
     ),
     sg.Button(
       button_text=" Play ", font=(font_button),
-      key="-PLAY-", enable_events=True, disabled=False
+      key="-PLAY-", enable_events=True, disabled=False, button_color="green"
     ),
     sg.Button(
       button_text=" Pause ", font=(font_button),
