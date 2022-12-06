@@ -24,7 +24,6 @@ def open_text(path_to_file):
     return w_list
 
 
-
 working_dir = os.getcwd()
 file_list = os.listdir(working_dir)
 file_names = list_files(file_list, working_dir)
@@ -213,15 +212,15 @@ while True:
                 loaded = True
                 w_count = int(values["-SLIDER-"])
                 if w_count == 1:
-                    word_grammar = 'word'
+                    word_gram = 'word'
                 else:
-                    word_grammar = 'words'
+                    word_gram = 'words'
                 wpm = int(values["-DIAL-"]) * 10
                 first_word = 0
                 last_word = w_count
                 sleep_time = w_count / (wpm/60)
-                disp_str = "File Loaded for {} {} at {} WPM. Press Play!"
-                to_display = disp_str.format(w_count, word_grammar, wpm)
+                dis_str = "File Loaded for {} {} at {} WPM. Press Play!"
+                to_display = dis_str.format(w_count, word_gram, wpm)
                 window["-READER-"].update(to_display)
                 window["-PLAY-"].update(disabled=False)
             else:
