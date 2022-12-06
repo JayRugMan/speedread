@@ -103,7 +103,7 @@ button_panel = [
     ),
     sg.Button(
       button_text=" Play ", font=(font_button),
-      key="-PLAY-", enable_events=True, disabled=False
+      key="-PLAY-", enable_events=True, disabled=True
     ),
     sg.Button(
       button_text=" Pause ", font=(font_button),
@@ -147,20 +147,21 @@ window = sg.Window("Speed Read", layout, alpha_channel=0.9)
 while True:
     if opened and not paused:
         event, values = window.read(timeout=0)
+
         if event in ("EXIT", sg.WIN_CLOSED):
             break
-        elif last_word < len(words_list):
+        elif event == "-PAUSE-":
+            window["-PLAY-"].update(disabled=False)
+            window["-PAUSE-"].update(disabled=True)
+            paused = True
+        elif last_word <= len(words_list):
             to_display = ' '.join(words_list[first_word:last_word])
             window["-READER-"].update(to_display)
             window.VisibilityChanged()
             sleep(sleep_time)
             first_word += w_count
             last_word += w_count
-        if event == "-PLAY-":
-            window["-PLAY-"].update(disabled=True)
-            window["-PAUSE-"].update(disabled=False)
-            paused = False
-        elif event == "-PAUSE-":
+        else:
             window["-PLAY-"].update(disabled=False)
             window["-PAUSE-"].update(disabled=True)
             paused = True
@@ -214,17 +215,14 @@ while True:
                 disp_str = "File Loaded for {} {} at {} WPM. Press Play!"
                 to_display = disp_str.format(w_count, word_grammar, wpm)
                 window["-READER-"].update(to_display)
+                window["-PLAY-"].update(disabled=False)
             else:
-                the_text = 'Select I file before clicking that!'
+                the_text = 'Select a file before clicking that!'
                 window["-FILE NAME-"].update(the_text)
-        if event == "-PLAY-":
+        elif event == "-PLAY-":
             window["-PLAY-"].update(disabled=True)
             window["-PAUSE-"].update(disabled=False)
             paused = False
-        elif event == "-PAUSE-":
-            window["-PLAY-"].update(disabled=False)
-            window["-PAUSE-"].update(disabled=True)
-            paused = True
         
 
 
