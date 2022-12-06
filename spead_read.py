@@ -172,12 +172,12 @@ while True:
             window["-FILE LIST-"].update(file_names)
         elif event == "-FILE LIST-":  # A file was chosen from the list
             try:
-                filename = os.path.join(
-                    values["-FOLDER-"], values["-FILE LIST-"][0]
+                filename = values["-FILE LIST-"][0]
+                file_full_path = os.path.join(
+                    values["-FOLDER-"], filename
                 )
                 window["-FILE NAME-"].update(filename)
                 file_chosen = True
-                ##JH window["-IMAGE-"].update(filename=filename)
                 window.VisibilityChanged()
             except:
                 pass
@@ -191,7 +191,7 @@ while True:
             window.VisibilityChanged()
         elif event == "-LOAD-":
             if file_chosen:
-                with open(filename, 'r') as file:
+                with open(file_full_path, 'r') as file:
                     the_lines = [i for i in file.read().split('\n') if len(i) != 0]
                 words_list = the_lines[0].split(' ')  # each word as list item\
                 opened = True
