@@ -21,7 +21,7 @@ file_list = os.listdir(working_dir)
 file_names = list_files(file_list, working_dir)
 file_chosen = False
 paused = True
-opened = False
+loaded = False
 
 
 #====== Simple GUI stuff =======
@@ -145,7 +145,7 @@ window = sg.Window("Speed Read", layout, alpha_channel=0.9)
 
 # the loop
 while True:
-    if opened and not paused:
+    if loaded and not paused:
         event, values = window.read(timeout=0)
 
         if event in ("EXIT", sg.WIN_CLOSED):
@@ -202,7 +202,7 @@ while True:
                 with open(file_full_path, 'r') as file:
                     the_lines = [i for i in file.read().split('\n') if len(i) != 0]
                 words_list = the_lines[0].split(' ')  # each word as list item\
-                opened = True
+                loaded = True
                 w_count = int(values["-SLIDER-"])
                 if w_count == 1:
                     word_grammar = 'word'
