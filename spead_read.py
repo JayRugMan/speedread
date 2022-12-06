@@ -103,11 +103,11 @@ button_panel = [
     ),
     sg.Button(
       button_text=" Play ", font=(font_button),
-      key="-PLAY-", enable_events=True, disabled=False, button_color="green"
+      key="-PLAY-", enable_events=True, disabled=False
     ),
     sg.Button(
       button_text=" Pause ", font=(font_button),
-      key="-PAUSE-", enable_events=True, disabled=True, button_color="red"
+      key="-PAUSE-", enable_events=True, disabled=True
     ),
   ]
 ]
@@ -151,17 +151,20 @@ while True:
             break
         elif last_word < len(words_list):
             to_display = ' '.join(words_list[first_word:last_word])
-            ##JH window["-READER-"].update("{} {}".format(to_display, sleep_time))
             window["-READER-"].update(to_display)
             window.VisibilityChanged()
             sleep(sleep_time)
             first_word += w_count
             last_word += w_count
         if event == "-PLAY-":
-            if paused:  # Toggles pause/play
-                paused = False
-            else:
-                paused = True
+            window["-PLAY-"].update(disabled=True)
+            window["-PAUSE-"].update(disabled=False)
+            paused = False
+        elif event == "-PAUSE-":
+            window["-PLAY-"].update(disabled=False)
+            window["-PAUSE-"].update(disabled=True)
+            paused = True
+
     else:
         event, values = window.read()
         if event in ("EXIT", sg.WIN_CLOSED):
@@ -214,6 +217,14 @@ while True:
             else:
                 the_text = 'Select I file before clicking that!'
                 window["-FILE NAME-"].update(the_text)
+        if event == "-PLAY-":
+            window["-PLAY-"].update(disabled=True)
+            window["-PAUSE-"].update(disabled=False)
+            paused = False
+        elif event == "-PAUSE-":
+            window["-PLAY-"].update(disabled=False)
+            window["-PAUSE-"].update(disabled=True)
+            paused = True
         
 
 
