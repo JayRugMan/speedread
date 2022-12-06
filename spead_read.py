@@ -25,7 +25,7 @@ loaded = False
 
 
 #====== Simple GUI stuff =======
-sg.theme('DarkTeal12')  # See gui_theme_sampler.py for more options
+sg.theme('DarkGrey5')  # See gui_theme_sampler.py for more options
 font_1 = 'Any 12'
 font_2 = 'Any 16'
 font_button = 'Any 14'
