@@ -20,7 +20,10 @@ def open_text(path_to_file):
     '''Opens file and returns a list of words'''
     with open(path_to_file, 'r') as file:
         the_lines = [i for i in file.read().split('\n') if len(i) != 0]
-    w_list = the_lines[0].split(' ')  # each word as list item
+    string = ''
+    for line in the_lines:
+        string += '{} '.format(line)
+    w_list = string.split(' ')  # each word as list item
     return w_list
 
 
