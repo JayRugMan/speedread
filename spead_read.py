@@ -23,7 +23,7 @@ def open_text(path_to_file):
     string = ''
     for line in the_lines:
         string += '{} '.format(line)
-    w_list = string.split(' ')  # each word as list item
+    w_list = [j for j in string.split(' ') if len(j) != 0]  # each word as list item
     return w_list
 
 
@@ -165,7 +165,7 @@ while True:
             window["-PLAY-"].update(disabled=False)
             window["-PAUSE-"].update(disabled=True)
             paused = True
-        elif first_word < (len(words_list) - 1):
+        elif first_word < wl_len:
             to_display = ' '.join(words_list[first_word:last_word])
             window["-READER-"].update(to_display)
             window.VisibilityChanged()
@@ -214,6 +214,7 @@ while True:
             if file_chosen:
                 # creates list of words
                 words_list = open_text(file_full_path)
+                wl_len = len(words_list)
                 loaded = True
                 w_count = int(values["-SLIDER-"])
                 if w_count == 1:
