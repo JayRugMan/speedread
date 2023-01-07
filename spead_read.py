@@ -165,7 +165,7 @@ while True:
             window["-PLAY-"].update(disabled=False)
             window["-PAUSE-"].update(disabled=True)
             paused = True
-        elif last_word <= len(words_list):
+        elif first_word < (len(words_list) - 1):
             to_display = ' '.join(words_list[first_word:last_word])
             window["-READER-"].update(to_display)
             window.VisibilityChanged()
@@ -173,6 +173,8 @@ while True:
             first_word += w_count
             last_word += w_count
         else:
+            window["-READER-"].update("")
+            window.VisibilityChanged()
             window["-PLAY-"].update(disabled=False)
             window["-PAUSE-"].update(disabled=True)
             paused = True
