@@ -161,17 +161,30 @@ while True:
 
         if event in ("EXIT", sg.WIN_CLOSED):
             break
+
         elif event == "-PAUSE-":
             window["-PLAY-"].update(disabled=False)
             window["-PAUSE-"].update(disabled=True)
             paused = True
+
         elif first_word < wl_len:
             to_display = ' '.join(words_list[first_word:last_word])
             window["-READER-"].update(to_display)
             window.VisibilityChanged()
-            sleep(sleep_time)
+            words_displayed = len(words_list[first_word:last_word])
+
+            if words_displayed < w_count:
+                # the last group of words needs to be presented at the same wpm
+                # as the rest, so the timeout needs to be adjusted accordingly.
+                # A nice way to do this is to multiply it by the ratio of words
+                # left to total word count
+                sleep((words_displayed/w_count) * sleep_time)
+            else:
+                sleep(sleep_time)
+
             first_word += w_count
             last_word += w_count
+
         else:
             window["-READER-"].update("")
             window.VisibilityChanged()
@@ -181,8 +194,10 @@ while True:
 
     else:
         event, values = window.read()
+
         if event in ("EXIT", sg.WIN_CLOSED):
             break
+
         if event == "-FOLDER-":
             folder = values["-FOLDER-"]
             try:
@@ -191,6 +206,7 @@ while True:
                 file_list = []
             file_names = list_files(file_list, folder)
             window["-FILE LIST-"].update(file_names)
+
         elif event == "-FILE LIST-":  # A file was chosen from the list
             try:
                 filename = values["-FILE LIST-"][0]
@@ -202,15 +218,19 @@ while True:
                 window.VisibilityChanged()
             except:
                 pass
+
         elif event == "-SLIDER-":
             words = int(values["-SLIDER-"])
             window["-WORDS-"].update(words)
             window.VisibilityChanged()
+
         elif event == "-DIAL-":
             wpm = int(values["-DIAL-"]) * 10
             window["-WPM-"].update(wpm)
             window.VisibilityChanged()
+
         elif event == "-LOAD-":
+
             if file_chosen:
                 # creates list of words
                 words_list = open_text(file_full_path)
@@ -229,9 +249,11 @@ while True:
                 to_display = dis_str.format(w_count, word_gram, wpm)
                 window["-READER-"].update(to_display)
                 window["-PLAY-"].update(disabled=False)
+
             else:
                 the_text = 'Select a file before clicking that!'
                 window["-FILE NAME-"].update(the_text)
+
         elif event == "-PLAY-":
             window["-PLAY-"].update(disabled=True)
             window["-PAUSE-"].update(disabled=False)
