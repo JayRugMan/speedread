@@ -152,7 +152,7 @@ layout = [
   ]
 ]
 
-window = sg.Window("Speed Read", layout, alpha_channel=0.9)
+window = sg.Window("Speed Read", layout, alpha_channel=0.95)
 
 # the loop
 while True:
