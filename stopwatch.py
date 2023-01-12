@@ -8,8 +8,7 @@ class timer():
     '''This object will keep the time'''
  
     def __init__(self):
-        self.started = False
-        self.paused = False
+        self.running = False
         self.time_mark = datetime.now()
         self.clock_time = timedelta(0)  # this will acumulate in the update method
         self.show = "0:00:00.000000"
@@ -17,14 +16,11 @@ class timer():
     def start(self):
         '''Sets initial time mark, initial start or unpause'''
         self.time_mark = datetime.now()
-        if self.paused:
-            self.paused = False
-        if not self.started:
-            self.started = True
+        self.running = True
 
     def stop(self):
         '''Pauses the timer - freezes the time on the display'''
-        self.paused = True
+        self.running = False
     
     def update(self):
         '''Adds time to the clock time'''
@@ -73,26 +69,26 @@ window = sg.Window("Stop Watch", layout, alpha_channel=0.9)
 
 # the loop
 while True:
-    if the_timer.started and not the_timer.paused:
+    if the_timer.running:
         # This will only run when start has been
         # pressed and until stop or exit is pressed
         event, values = window.read(timeout=1)  # only waits 10 ms for input
         if event in ("EXIT", sg.WIN_CLOSED):
             break  # necessary for window and program to close properly
         elif event == '-STOP-':
-            the_timer.stop()  # sets paused to true
+            the_timer.stop()  # sets "running" to "False"
             pass
         else:
             the_timer.update()  # updated every 10 milliseconds if no input
             window["-CLOCK-"].update(the_timer.show)
     else:
         # start and reset do nothing wile time is started (running)
-        # these events only work if not started or paused
+        # these events only work if not "running"
         event, values = window.read()  # wait indefinitely for input from window
         if event in ("EXIT", sg.WIN_CLOSED):
             break  # necessary for window and program to close properly
         if event == '-START-':
-            the_timer.start()  # sets started to true and paused to false
+            the_timer.start()  # sets "running" to "True"
         elif event == '-RESET-':
             the_timer = timer()  # fresh timer class set
             window["-CLOCK-"].update(the_timer.show)
