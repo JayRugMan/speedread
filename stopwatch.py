@@ -67,6 +67,7 @@ layout = [
             button_text=" reset ", font=(font_button),
             key="-RESET-", enable_events=True
         ),
+        sg.Stretch()
     ]
 ]
 
