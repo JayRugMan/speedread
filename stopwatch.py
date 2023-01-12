@@ -19,7 +19,8 @@ class timer():
         self.time_mark = datetime.now()
         if self.paused:
             self.paused = False
-        self.started = True
+        if not self.started:
+            self.started = True
 
     def stop(self):
         '''Pauses the timer - freezes the time on the display'''
@@ -54,18 +55,15 @@ layout = [
     [
         sg.Stretch(),
         sg.Button(  # start button
-            button_text=" start ", font=(font_button),
-            key="-START-", enable_events=True
+            button_text=" start ", font=(font_button), key="-START-"
         ),
         sg.Stretch(),
         sg.Button(  # stop button
-            button_text=" stop ", font=(font_button),
-            key="-STOP-", enable_events=True
+            button_text=" stop ", font=(font_button), key="-STOP-"
         ),
         sg.Stretch(),
         sg.Button(  # reset button
-            button_text=" reset ", font=(font_button),
-            key="-RESET-", enable_events=True
+            button_text=" reset ", font=(font_button), key="-RESET-"
         ),
         sg.Stretch()
     ]
@@ -78,7 +76,7 @@ while True:
     if the_timer.started and not the_timer.paused:
         # This will only run when start has been
         # pressed and until stop or exit is pressed
-        event, values = window.read(timeout=10)  # only waits 10 ms for input
+        event, values = window.read(timeout=1)  # only waits 10 ms for input
         if event in ("EXIT", sg.WIN_CLOSED):
             break  # necessary for window and program to close properly
         elif event == '-STOP-':
