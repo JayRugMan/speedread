@@ -17,17 +17,17 @@ class timer():
         '''Sets initial time mark, initial start or unpause'''
         self.time_mark = datetime.now()
         self.running = True
-
-    def stop(self):
-        '''Pauses the timer - freezes the time on the display'''
-        self.running = False
     
-    def update(self):
-        '''Adds time to the clock time'''
+    def update(self, stopping=False):
+        '''Adds time to the clock time
+        If "stopping" is true, then the clock stops'''
         now = datetime.now()  # snapshots now for use in clock-time delta and time mark
         self.clock_time += (now - self.time_mark)  # adds time diff to clock time
         self.time_mark = now  # resets time mark
         self.show = str(self.clock_time)  # displays as hh:mm:ss.ssssss
+        if stopping:
+            self.running = False
+        
 
 
 the_timer = timer()
@@ -76,11 +76,10 @@ while True:
         if event in ("EXIT", sg.WIN_CLOSED):
             break  # necessary for window and program to close properly
         elif event == '-STOP-':
-            the_timer.stop()  # sets "running" to "False"
-            pass
+            the_timer.update(stopping=True)  # give final update but stops
         else:
-            the_timer.update()  # updated every 10 milliseconds if no input
-            window["-CLOCK-"].update(the_timer.show)
+            the_timer.update()  # updated every 1 millisecond if no input
+        window["-CLOCK-"].update(the_timer.show)
     else:
         # start and reset do nothing wile time is started (running)
         # these events only work if not "running"
