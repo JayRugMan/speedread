@@ -41,14 +41,14 @@ font_button = 'Any 14'
 -START- -STOP- -RESET-
 '''
 layout = [
-    [
+    [  # First row
         sg.Stretch(),
         sg.Text(  # main time display
             the_timer.show, font=(font_1), key="-CLOCK-"
         ),
         sg.Stretch(),
     ],
-    [
+    [  # Second row
         sg.Stretch(),
         sg.Button(  # start button
             button_text=" start ", font=(font_button), key="-START-"
