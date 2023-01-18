@@ -72,7 +72,7 @@ while True:
     if the_timer.running:
         # This will only run when start has been
         # pressed and until stop or exit is pressed
-        event, values = window.read(timeout=1)  # only waits 10 ms for input
+        event, values = window.read(timeout=1)  # only waits 1 ms for input
         if event in ("EXIT", sg.WIN_CLOSED):
             break  # necessary for window and program to close properly
         elif event == '-STOP-':
