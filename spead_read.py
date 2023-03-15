@@ -2,7 +2,7 @@
 
 import PySimpleGUIQt as sg
 import os.path
-from os import system, name as os_name
+from os import name as os_name
 from time import sleep         
 
 
